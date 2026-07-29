@@ -46,8 +46,8 @@ function ServicesPage() {
             Premium moving, built around your day.
           </h1>
           <p className="mt-5 text-lg text-muted-foreground">
-            Based in Lagos, available across Nigeria. Every LOTUS service is delivered by trained,
-            uniformed crews with protected transit and a consultant who stays reachable throughout.
+            Every LOTUS service is delivered by trained, uniformed crews with protected transit and
+            a consultant who stays reachable throughout.
           </p>
         </Reveal>
 

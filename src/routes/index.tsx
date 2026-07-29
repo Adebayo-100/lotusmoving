@@ -184,14 +184,14 @@ function Hero() {
         <Reveal className="max-w-2xl">
           <span className="glass-dark inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-medium uppercase tracking-[0.18em] text-primary-foreground">
             <Sparkles className="h-3.5 w-3.5 text-gold" />
-            Lagos to anywhere in Nigeria
+            Premium relocation, Nigeria
           </span>
           <h1 className="mt-7 font-display text-5xl font-bold leading-[1.02] text-primary-foreground sm:text-6xl lg:text-7xl">
             Move Without <span className="text-gold-gradient">Stress.</span>
           </h1>
           <p className="mt-5 max-w-xl text-lg leading-relaxed text-primary-foreground/80 sm:text-xl">
-            {SITE.tagline} Based in Lagos, moving you across Nigeria. Trained crews, protected
-            transit and one consultant who stays with you from the first box to the last.
+            {SITE.tagline} Trained crews, protected transit and one consultant who stays with you
+            from the first box to the last.
           </p>
 
           <div className="mt-9 flex flex-wrap gap-3">
