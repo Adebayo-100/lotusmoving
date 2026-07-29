@@ -5,8 +5,9 @@ export function FloatingActions() {
   return (
     <>
       {/* Desktop-only social rail — kept clear of the WhatsApp button */}
-      <div className="pointer-events-none fixed left-6 top-1/2 z-40 hidden -translate-y-1/2 lg:block">
-        <div className="glass pointer-events-auto flex flex-col items-center gap-2 rounded-full p-2 shadow-soft">
+      <div className="pointer-events-none fixed bottom-6 left-6 z-40 hidden lg:block">
+        <div className="glass pointer-events-auto flex items-center gap-1 rounded-full p-2 shadow-soft">
+
           <a
             href={SITE.instagram}
             target="_blank"
