@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, MapPin } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Reveal } from "@/components/reveal";
@@ -158,6 +158,10 @@ function BookPage() {
             Four short steps. When you're done, we open WhatsApp with your details so a consultant
             can send a personalised quotation.
           </p>
+          <p className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-primary">
+            <MapPin className="h-4 w-4" />
+            Based in Lagos — moving you anywhere in Nigeria
+          </p>
         </Reveal>
 
         <div className="mt-10 grid grid-cols-4 gap-2">
@@ -208,7 +212,7 @@ function BookPage() {
                 <Input
                   value={data.destination}
                   onChange={(v) => set("destination", v)}
-                  placeholder="e.g. 4 Glover Road, Ikoyi"
+                  placeholder="e.g. Ikoyi, Abuja, Port Harcourt…"
                 />
               </Field>
               <div className="grid gap-6 sm:grid-cols-2">
