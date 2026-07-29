@@ -81,17 +81,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "LOTUS Moving Service | We Move What Matters" },
+      { title: "LOTUS Moving Service | Move Without Stress in Nigeria" },
       {
         name: "description",
         content:
-          "LOTUS is a premium, technology-driven moving and relocation company in Nigeria. Home and office relocation, packing, storage and delivery.",
+          "Premium home and office relocation, packing, storage and delivery in Nigeria. Book your move with LOTUS in minutes and finish on WhatsApp.",
       },
       { name: "author", content: "LOTUS Moving Service" },
       { name: "theme-color", content: "#0D6B4F" },
       { property: "og:site_name", content: "LOTUS Moving Service" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "LOTUS Moving Service | Move Without Stress in Nigeria" },
+      { name: "twitter:title", content: "LOTUS Moving Service | Move Without Stress in Nigeria" },
+      { property: "og:description", content: "Premium home and office relocation, packing, storage and delivery in Nigeria. Book your move with LOTUS in minutes and finish on WhatsApp." },
+      { name: "twitter:description", content: "Premium home and office relocation, packing, storage and delivery in Nigeria. Book your move with LOTUS in minutes and finish on WhatsApp." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1ce3cecc-7bf2-4b35-9799-c980da7b9117/id-preview-35a8338e--819b5ab1-9f8b-4fcb-b1e1-759df6e70a3f.lovable.app-1785356708576.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1ce3cecc-7bf2-4b35-9799-c980da7b9117/id-preview-35a8338e--819b5ab1-9f8b-4fcb-b1e1-759df6e70a3f.lovable.app-1785356708576.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

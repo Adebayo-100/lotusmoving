@@ -36,11 +36,11 @@ export const Route = createFileRoute("/")({
         content:
           "Premium home and office relocation, packing, storage and delivery in Nigeria. Book your move with LOTUS in minutes and finish on WhatsApp.",
       },
-      { property: "og:title", content: "LOTUS Moving Service | Move Without Stress" },
+      { property: "og:title", content: "LOTUS Moving Service | Move Without Stress in Nigeria" },
       {
         property: "og:description",
         content:
-          "We Move What Matters. Premium, technology-driven relocation for Nigerian homes and businesses.",
+          "Premium home and office relocation, packing, storage and delivery in Nigeria. Book your move with LOTUS in minutes and finish on WhatsApp.",
       },
     ],
   }),
