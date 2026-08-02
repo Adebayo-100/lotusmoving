@@ -27,9 +27,10 @@ export function SiteFooter() {
             </div>
           </div>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-primary-foreground/75">
-            {SITE.tagline} Premium, technology-driven relocation for homes and businesses across
-            Nigeria.
+            {SITE.tagline} Premium, technology-driven relocation for homes and businesses — from
+            Lagos to anywhere in Nigeria.
           </p>
+
           <div className="mt-6 flex items-center gap-3">
             <a
               href={SITE.instagram}
@@ -102,11 +103,17 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link to="/drivers" className="transition-colors hover:text-gold">
+                Drive With Us
+              </Link>
+            </li>
+            <li>
               <Link to="/book" className="transition-colors hover:text-gold">
                 Book a Move
               </Link>
             </li>
           </ul>
+
         </div>
 
         <div>
@@ -128,8 +135,11 @@ export function SiteFooter() {
             </li>
             <li className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-              <span>{SITE.city}</span>
+              <span>
+                {SITE.city} — {SITE.coverage}
+              </span>
             </li>
+
           </ul>
         </div>
       </div>
