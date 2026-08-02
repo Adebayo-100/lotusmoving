@@ -160,6 +160,8 @@ function Home() {
       <Testimonials />
       <Partners />
       <Corporate />
+      <DriversCta />
+
       <FollowUs />
       <Faqs />
       <BlogPreview />
@@ -550,6 +552,40 @@ function Corporate() {
     </section>
   );
 }
+
+function DriversCta() {
+  return (
+    <section className="bg-card py-20 lg:py-24">
+      <div className="container-lotus">
+        <Reveal>
+          <div className="flex flex-col items-start justify-between gap-8 rounded-[2rem] border border-border bg-background p-10 shadow-soft lg:flex-row lg:items-center lg:p-14">
+            <div className="max-w-xl">
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+                Drive with LOTUS
+              </p>
+              <h2 className="mt-4 font-display text-3xl font-bold leading-tight sm:text-4xl">
+                Own a truck or drive professionally?
+              </h2>
+              <p className="mt-4 leading-relaxed text-muted-foreground">
+                Join our partner network and run relocation and delivery jobs from Lagos to anywhere
+                in Nigeria — agreed rates, prompt payouts and jobs that fit your schedule.
+              </p>
+            </div>
+            <Link
+              to="/drivers"
+              className="group inline-flex shrink-0 items-center gap-2 rounded-full bg-primary px-7 py-4 text-sm font-semibold text-primary-foreground shadow-soft transition-all duration-300 hover:-translate-y-1 hover:bg-accent"
+            >
+              Apply to drive
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+
 
 function FollowUs() {
   const topics = [
