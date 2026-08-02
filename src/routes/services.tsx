@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Reveal } from "@/components/reveal";
-import { SERVICES } from "@/lib/site";
+import { SERVICES, SITE } from "@/lib/site";
 import heroImg from "@/assets/hero-move.jpg";
 import officeImg from "@/assets/service-office.jpg";
 import packingImg from "@/assets/service-packing.jpg";
@@ -43,13 +43,14 @@ function ServicesPage() {
         <Reveal className="max-w-2xl">
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">Services</p>
           <h1 className="mt-4 font-display text-5xl font-bold leading-[1.05]">
-            Premium moving, built around your day.
+            Premium moving, from Lagos to anywhere in Nigeria.
           </h1>
           <p className="mt-5 text-lg text-muted-foreground">
             Every LOTUS service is delivered by trained, uniformed crews with protected transit and
-            a consultant who stays reachable throughout.
+            a consultant who stays reachable throughout. {SITE.coverageLong}
           </p>
         </Reveal>
+
 
         <div className="mt-16 space-y-8">
           {SERVICES.map((s, i) => (
