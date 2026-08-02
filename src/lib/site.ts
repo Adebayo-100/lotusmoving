@@ -4,7 +4,7 @@ export const SITE = {
   tagline: "We Move What Matters.",
   whatsappNumber: "08137912310",
   whatsappIntl: "2348137912310",
-  email: "hello@lotusmoving.ng",
+  email: "lotusmovingng@gmail.com",
   instagram: "https://instagram.com/LOTUS_MOVING_SERVICES",
   instagramHandle: "@LOTUS_MOVING_SERVICES",
   tiktok: "https://www.tiktok.com/@lotusmovingservices",
