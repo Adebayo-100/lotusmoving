@@ -10,11 +10,30 @@ export const SITE = {
   tiktok: "https://www.tiktok.com/@lotusmovingservices",
   tiktokHandle: "LOTUS MOVING SERVICES",
   city: "Lagos, Nigeria",
+  coverage: "From Lagos to anywhere in Nigeria",
+  coverageLong:
+    "Based in Lagos, moving you to anywhere in Nigeria — Abuja, Port Harcourt, Ibadan, Benin, Enugu, Kano and every route in between.",
+  formspree: "https://formspree.io/f/xvzeepjj",
 } as const;
 
 export function waLink(message: string) {
   return `https://wa.me/${SITE.whatsappIntl}?text=${encodeURIComponent(message)}`;
 }
+
+/** Sends a submission to the Formspree inbox. Returns true when accepted. */
+export async function sendToFormspree(payload: Record<string, string>) {
+  try {
+    const res = await fetch(SITE.formspree, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(payload),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 
 export const SERVICES = [
   {
