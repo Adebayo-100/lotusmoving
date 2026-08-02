@@ -10,10 +10,12 @@ const NAV = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
   { to: "/how-it-works", label: "How It Works" },
+  { to: "/drivers", label: "Drivers" },
   { to: "/about", label: "About" },
   { to: "/blog", label: "Blog" },
   { to: "/contact", label: "Contact" },
 ] as const;
+
 
 export function SiteHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -46,8 +48,9 @@ export function SiteHeader() {
             alt="LOTUS Moving Service logo"
             width={44}
             height={44}
-            className="h-10 w-10 shrink-0 rounded-xl object-cover ring-1 ring-border"
+            className="h-11 w-11 shrink-0 rounded-full bg-white object-contain p-1 ring-1 ring-border"
           />
+
           <span className="min-w-0">
             <span
               className={cn(

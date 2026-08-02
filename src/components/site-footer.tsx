@@ -16,8 +16,9 @@ export function SiteFooter() {
               width={48}
               height={48}
               loading="lazy"
-              className="h-11 w-11 rounded-xl object-cover"
+              className="h-12 w-12 rounded-full bg-white object-contain p-1"
             />
+
             <div>
               <p className="font-display text-lg font-bold">LOTUS</p>
               <p className="text-[10px] uppercase tracking-[0.22em] text-primary-foreground/70">
