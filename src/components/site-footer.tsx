@@ -17,7 +17,7 @@ export function SiteFooter() {
                 width={48}
                 height={48}
                 loading="lazy"
-                className="h-full w-full scale-[1.18] object-contain"
+                className="h-full w-full scale-[1.04] object-contain"
               />
             </span>
 

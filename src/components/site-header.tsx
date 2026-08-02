@@ -49,7 +49,7 @@ export function SiteHeader() {
               alt="LOTUS Moving Service logo"
               width={44}
               height={44}
-              className="h-full w-full scale-[1.18] object-contain"
+              className="h-full w-full scale-[1.04] object-contain"
             />
           </span>
 
