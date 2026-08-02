@@ -10,14 +10,18 @@ export function SiteFooter() {
       <div className="container-lotus grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4 lg:py-20">
         <div>
           <div className="flex items-center gap-3">
-            <img
-              src={logo.url}
-              alt="LOTUS Moving Service logo"
-              width={48}
-              height={48}
-              loading="lazy"
-              className="h-11 w-11 rounded-xl object-cover"
-            />
+            <span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full bg-white">
+              <img
+                src={logo.url}
+                alt="LOTUS Moving Service logo"
+                width={48}
+                height={48}
+                loading="lazy"
+                className="h-full w-full scale-[1.04] object-contain"
+              />
+            </span>
+
+
             <div>
               <p className="font-display text-lg font-bold">LOTUS</p>
               <p className="text-[10px] uppercase tracking-[0.22em] text-primary-foreground/70">
@@ -26,9 +30,10 @@ export function SiteFooter() {
             </div>
           </div>
           <p className="mt-5 max-w-xs text-sm leading-relaxed text-primary-foreground/75">
-            {SITE.tagline} Premium, technology-driven relocation for homes and businesses across
-            Nigeria.
+            {SITE.tagline} Premium, technology-driven relocation for homes and businesses — from
+            Lagos to anywhere in Nigeria.
           </p>
+
           <div className="mt-6 flex items-center gap-3">
             <a
               href={SITE.instagram}
@@ -101,11 +106,17 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link to="/drivers" className="transition-colors hover:text-gold">
+                Drive With Us
+              </Link>
+            </li>
+            <li>
               <Link to="/book" className="transition-colors hover:text-gold">
                 Book a Move
               </Link>
             </li>
           </ul>
+
         </div>
 
         <div>
@@ -127,8 +138,11 @@ export function SiteFooter() {
             </li>
             <li className="flex items-start gap-3">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-              <span>{SITE.city}</span>
+              <span>
+                {SITE.city} — {SITE.coverage}
+              </span>
             </li>
+
           </ul>
         </div>
       </div>

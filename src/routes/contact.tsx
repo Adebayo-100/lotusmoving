@@ -5,7 +5,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Reveal } from "@/components/reveal";
 import { InstagramIcon, TiktokIcon, WhatsappIcon } from "@/components/social-icons";
-import { SITE, waLink } from "@/lib/site";
+import { SITE, sendToFormspree, waLink } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -39,7 +39,7 @@ function ContactPage() {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const result = schema.safeParse(form);
     if (!result.success) {
@@ -51,9 +51,19 @@ function ContactPage() {
     }
     setErrors({});
     const msg = `Hello LOTUS 👋\n\nName: ${result.data.name}\nPhone: ${result.data.phone}\nMessage: ${result.data.message}`;
-    toast.success("Opening WhatsApp…");
+    const ok = await sendToFormspree({
+      _subject: `Website enquiry — ${result.data.name}`,
+      formType: "Contact enquiry",
+      name: result.data.name,
+      phone: result.data.phone,
+      message: result.data.message,
+    });
+    toast[ok ? "success" : "message"](
+      ok ? "Message sent. Opening WhatsApp…" : "Opening WhatsApp…",
+    );
     window.open(waLink(msg), "_blank", "noopener,noreferrer");
   };
+
 
   return (
     <div className="pb-24 pt-32 lg:pt-40">
@@ -90,10 +100,11 @@ function ContactPage() {
             <li className="flex items-start gap-4">
               <MapPin className="mt-0.5 h-5 w-5 text-accent" />
               <div>
-                <p className="font-semibold">Base</p>
-                <p className="text-muted-foreground">{SITE.city} — serving nationwide</p>
+                <p className="font-semibold">Base &amp; coverage</p>
+                <p className="text-muted-foreground">{SITE.city} — {SITE.coverage}</p>
               </div>
             </li>
+
             <li className="flex items-start gap-4">
               <Clock className="mt-0.5 h-5 w-5 text-accent" />
               <div>

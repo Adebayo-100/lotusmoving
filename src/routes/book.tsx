@@ -5,7 +5,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Reveal } from "@/components/reveal";
 import { WhatsappIcon } from "@/components/social-icons";
-import { SERVICES, waLink } from "@/lib/site";
+import { SERVICES, sendToFormspree, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/book")({
@@ -372,12 +372,34 @@ function BookPage() {
                 href={waLink(message)}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => toast.success("Opening WhatsApp with your move details…")}
+                onClick={() => {
+                  toast.success("Opening WhatsApp with your move details…");
+                  void sendToFormspree({
+                    _subject: `Move booking — ${data.fullName}`,
+                    formType: "Move booking request",
+                    name: data.fullName,
+                    phone: data.phone,
+                    whatsapp: data.whatsapp,
+                    email: data.email || "—",
+                    service: data.service,
+                    pickup: data.pickup,
+                    destination: data.destination,
+                    moveSize: data.moveSize,
+                    preferredDate: data.date,
+                    propertyType: data.propertyType,
+                    floor: data.floor || "Ground",
+                    elevator: data.elevator,
+                    packing: data.packing,
+                    storage: data.storage,
+                    notes: data.notes || "—",
+                  });
+                }}
                 className="mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground shadow-soft transition-all duration-300 hover:-translate-y-1"
               >
                 <WhatsappIcon className="h-5 w-5" />
                 Continue to WhatsApp
               </a>
+
               <p className="mt-4 text-center text-xs text-muted-foreground">
                 A LOTUS consultant reviews your details and sends a personalised quotation on
                 WhatsApp.

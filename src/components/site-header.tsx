@@ -10,10 +10,12 @@ const NAV = [
   { to: "/", label: "Home" },
   { to: "/services", label: "Services" },
   { to: "/how-it-works", label: "How It Works" },
+  { to: "/drivers", label: "Drivers" },
   { to: "/about", label: "About" },
   { to: "/blog", label: "Blog" },
   { to: "/contact", label: "Contact" },
 ] as const;
+
 
 export function SiteHeader() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -41,13 +43,17 @@ export function SiteHeader() {
     >
       <div className="container-lotus grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 py-3 lg:py-4">
         <Link to="/" className="flex min-w-0 items-center gap-3" aria-label={`${SITE.name} home`}>
-          <img
-            src={logo.url}
-            alt="LOTUS Moving Service logo"
-            width={44}
-            height={44}
-            className="h-10 w-10 shrink-0 rounded-xl object-cover ring-1 ring-border"
-          />
+          <span className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-full bg-white ring-1 ring-border">
+            <img
+              src={logo.url}
+              alt="LOTUS Moving Service logo"
+              width={44}
+              height={44}
+              className="h-full w-full scale-[1.04] object-contain"
+            />
+          </span>
+
+
           <span className="min-w-0">
             <span
               className={cn(
