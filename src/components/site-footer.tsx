@@ -10,14 +10,17 @@ export function SiteFooter() {
       <div className="container-lotus grid gap-12 py-16 md:grid-cols-2 lg:grid-cols-4 lg:py-20">
         <div>
           <div className="flex items-center gap-3">
-            <img
-              src={logo.url}
-              alt="LOTUS Moving Service logo"
-              width={48}
-              height={48}
-              loading="lazy"
-              className="h-12 w-12 rounded-full bg-white object-contain p-1"
-            />
+            <span className="grid h-12 w-12 shrink-0 place-items-center overflow-hidden rounded-full bg-white">
+              <img
+                src={logo.url}
+                alt="LOTUS Moving Service logo"
+                width={48}
+                height={48}
+                loading="lazy"
+                className="h-full w-full scale-[1.45] object-contain"
+              />
+            </span>
+
 
             <div>
               <p className="font-display text-lg font-bold">LOTUS</p>
