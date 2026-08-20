@@ -433,44 +433,51 @@ function BookPage() {
                 </div>
               </dl>
 
-              <a
-                href={waLink(message)}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => {
-                  toast.success("Opening WhatsApp with your move details…");
-                  void sendToFormspree({
-                    _subject: `Move booking — ${data.fullName}`,
-                    formType: "Move booking request",
-                    name: data.fullName,
-                    phone: data.phone,
-                    whatsapp: data.whatsapp,
-                    email: data.email || "—",
-                    service: data.service,
-                    pickup: data.pickup,
-                    destination: data.destination,
-                    moveSize: data.moveSize,
-                    preferredDate: data.date,
-                    propertyType: data.propertyType,
-                    floor: data.floor || "Ground",
-                    elevator: data.elevator,
-                    packing: data.packing,
-                    storage: data.storage,
-                    notes: data.notes || "—",
-                  });
-                }}
-                className="mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground shadow-soft transition-all duration-300 hover:-translate-y-1"
+              <div className="mt-8 rounded-2xl border border-border bg-secondary/40 p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                  Estimated proforma invoice
+                </p>
+                <ul className="mt-4 space-y-2 text-sm">
+                  {preview.lines.map((l) => (
+                    <li key={l.label} className="flex justify-between gap-4">
+                      <span className="text-muted-foreground">{l.label}</span>
+                      <span className="font-medium">{formatNaira(l.amount)}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-4 flex justify-between border-t border-border pt-4 text-base font-semibold">
+                  <span>Estimated total</span>
+                  <span>{formatNaira(preview.total)}</span>
+                </div>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Indicative only — a consultant confirms the final figure before any payment.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={submit}
+                disabled={sending}
+                className="mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground shadow-soft transition-all duration-300 hover:-translate-y-1 disabled:pointer-events-none disabled:opacity-60"
               >
-                <WhatsappIcon className="h-5 w-5" />
-                Continue to WhatsApp
-              </a>
+                {sending ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" /> Submitting…
+                  </>
+                ) : (
+                  <>
+                    <Check className="h-5 w-5" /> Submit booking request
+                  </>
+                )}
+              </button>
 
               <p className="mt-4 text-center text-xs text-muted-foreground">
-                A LOTUS consultant reviews your details and sends a personalised quotation on
-                WhatsApp.
+                Your request goes straight to the LOTUS team. We'll generate your invoice and move
+                reminder instantly.
               </p>
             </div>
           )}
+
 
           <div className="mt-9 flex items-center justify-between gap-3">
             <button
