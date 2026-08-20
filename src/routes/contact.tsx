@@ -192,12 +192,20 @@ function ContactPage() {
               </label>
             </div>
 
+            {sent && (
+              <p className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4 text-sm font-medium text-primary">
+                Message received — a move consultant will reply shortly.
+              </p>
+            )}
+
             <button
               type="submit"
-              className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground transition-all duration-300 hover:-translate-y-1"
+              disabled={sending}
+              className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground transition-all duration-300 hover:-translate-y-1 disabled:pointer-events-none disabled:opacity-60"
             >
-              <WhatsappIcon className="h-5 w-5" /> Send on WhatsApp
+              {sending ? "Sending…" : "Send message"}
             </button>
+
             <p className="mt-4 text-center text-xs text-muted-foreground">
               Planning a full relocation?{" "}
               <Link to="/book" className="font-semibold text-primary">
