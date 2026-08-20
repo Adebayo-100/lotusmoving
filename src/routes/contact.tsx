@@ -4,8 +4,8 @@ import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Reveal } from "@/components/reveal";
-import { InstagramIcon, TiktokIcon, WhatsappIcon } from "@/components/social-icons";
-import { SITE, sendToFormspree, waLink } from "@/lib/site";
+import { InstagramIcon, TiktokIcon } from "@/components/social-icons";
+import { SITE, sendToFormspree } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
