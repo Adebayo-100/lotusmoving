@@ -148,7 +148,7 @@ function ContactPage() {
           >
             <h2 className="font-display text-2xl font-semibold">Send a quick message</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              We'll continue the conversation on WhatsApp.
+              We reply by phone or email — no app switching required.
             </p>
 
             <div className="mt-7 grid gap-5">
