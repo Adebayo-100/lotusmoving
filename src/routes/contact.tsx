@@ -38,6 +38,8 @@ const schema = z.object({
 function ContactPage() {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +52,7 @@ function ContactPage() {
       return;
     }
     setErrors({});
-    const msg = `Hello LOTUS 👋\n\nName: ${result.data.name}\nPhone: ${result.data.phone}\nMessage: ${result.data.message}`;
+    setSending(true);
     const ok = await sendToFormspree({
       _subject: `Website enquiry — ${result.data.name}`,
       formType: "Contact enquiry",
@@ -58,11 +60,16 @@ function ContactPage() {
       phone: result.data.phone,
       message: result.data.message,
     });
-    toast[ok ? "success" : "message"](
-      ok ? "Message sent. Opening WhatsApp…" : "Opening WhatsApp…",
-    );
-    window.open(waLink(msg), "_blank", "noopener,noreferrer");
+    setSending(false);
+    if (!ok) {
+      toast.error("We couldn't send your message. Please try again in a moment.");
+      return;
+    }
+    setSent(true);
+    setForm({ name: "", phone: "", message: "" });
+    toast.success("Message sent — we'll reply shortly.");
   };
+
 
 
   return (
