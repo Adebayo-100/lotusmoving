@@ -106,35 +106,89 @@ function BookPage() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sending, setSending] = useState(false);
+  const [booking, setBooking] = useState<BookingDetails | null>(null);
 
   const set = (k: keyof Form, v: string) => {
     setData((d) => ({ ...d, [k]: v }));
     setErrors((e) => ({ ...e, [k]: "" }));
   };
 
-  const message = useMemo(
-    () =>
-      [
-        "Hello LOTUS 👋",
-        "",
-        "I would like a personalized quotation.",
-        "",
-        `Name: ${data.fullName}`,
-        `Phone: ${data.phone}`,
-        `Service: ${data.service}`,
-        `Pickup: ${data.pickup}`,
-        `Destination: ${data.destination}`,
-        `Move Size: ${data.moveSize}`,
-        `Date: ${data.date}`,
-        `Property Type: ${data.propertyType}`,
-        `Floor: ${data.floor || "Ground"}`,
-        `Elevator: ${data.elevator}`,
-        `Packing: ${data.packing}`,
-        `Storage: ${data.storage}`,
-        `Notes: ${data.notes || "—"}`,
-      ].join("\n"),
-    [data],
-  );
+  const preview = useMemo(() => {
+    const details: BookingDetails = {
+      reference: "LMS-PREVIEW",
+      fullName: data.fullName,
+      phone: data.phone,
+      service: data.service,
+      pickup: data.pickup,
+      destination: data.destination,
+      moveSize: data.moveSize,
+      date: data.date,
+      propertyType: data.propertyType,
+      floor: data.floor,
+      elevator: data.elevator,
+      packing: data.packing,
+      storage: data.storage,
+    };
+    const lines = estimateLines(details);
+    return { lines, total: estimateTotal(lines) };
+  }, [data]);
+
+  const submit = async () => {
+    if (sending) return;
+    setSending(true);
+    const details: BookingDetails = {
+      reference: makeReference(data.fullName),
+      fullName: data.fullName,
+      phone: data.phone,
+      whatsapp: data.whatsapp,
+      email: data.email,
+      service: data.service,
+      pickup: data.pickup,
+      destination: data.destination,
+      moveSize: data.moveSize,
+      date: data.date,
+      propertyType: data.propertyType,
+      floor: data.floor || "Ground",
+      elevator: data.elevator,
+      packing: data.packing,
+      storage: data.storage,
+      notes: data.notes || "—",
+    };
+    const lines = estimateLines(details);
+    const ok = await sendToFormspree({
+      _subject: `Move booking ${details.reference} — ${details.fullName}`,
+      _replyto: details.email || "",
+      formType: "Move booking request",
+      reference: details.reference,
+      name: details.fullName,
+      phone: details.phone,
+      whatsapp: details.whatsapp ?? "",
+      email: details.email || "—",
+      service: details.service,
+      pickup: details.pickup,
+      destination: details.destination,
+      moveSize: details.moveSize,
+      preferredDate: details.date,
+      propertyType: details.propertyType ?? "",
+      floor: details.floor ?? "",
+      elevator: details.elevator ?? "",
+      packing: details.packing ?? "",
+      storage: details.storage ?? "",
+      notes: details.notes ?? "",
+      estimateBreakdown: lines.map((l) => `${l.label}: ${formatNaira(l.amount)}`).join(" | "),
+      estimatedTotal: formatNaira(estimateTotal(lines)),
+    });
+    setSending(false);
+    if (!ok) {
+      toast.error("We couldn't submit your request. Please check your connection and try again.");
+      return;
+    }
+    setBooking(details);
+    toast.success(`Booking ${details.reference} received — your invoice is ready.`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
 
   const validate = (i: number) => {
     const schema = [step1Schema, step2Schema, step3Schema][i];
