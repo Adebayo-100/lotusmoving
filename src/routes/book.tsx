@@ -213,6 +213,8 @@ function BookPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  if (booking) return <BookingSuccess booking={booking} />;
+
   return (
     <div className="bg-background pb-24 pt-32 lg:pt-40">
       <div className="container-lotus max-w-3xl">
@@ -220,10 +222,11 @@ function BookPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">Booking</p>
           <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">Book your move</h1>
           <p className="mt-4 text-muted-foreground">
-            Four short steps. When you're done, we open WhatsApp with your details so a consultant
-            can send a personalised quotation.
+            Four short steps. Submit and we instantly generate your proforma invoice and a moving-day
+            reminder, while a consultant reviews the details.
           </p>
         </Reveal>
+
 
         <div className="mt-10 grid grid-cols-4 gap-2">
           {STEP_LABELS.map((label, i) => (
