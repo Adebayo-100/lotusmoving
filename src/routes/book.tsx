@@ -1,12 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarClock, Check, FileText, Loader2 } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Reveal } from "@/components/reveal";
-import { WhatsappIcon } from "@/components/social-icons";
-import { SERVICES, sendToFormspree, waLink } from "@/lib/site";
+import { SERVICES, sendToFormspree } from "@/lib/site";
+import {
+  buildInvoiceHtml,
+  buildReminderIcs,
+  downloadFile,
+  estimateLines,
+  estimateTotal,
+  formatNaira,
+  makeReference,
+  openInvoiceForPrint,
+  type BookingDetails,
+} from "@/lib/booking-doc";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/book")({
   head: () => ({
@@ -95,35 +106,89 @@ function BookPage() {
   const [step, setStep] = useState(0);
   const [data, setData] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sending, setSending] = useState(false);
+  const [booking, setBooking] = useState<BookingDetails | null>(null);
 
   const set = (k: keyof Form, v: string) => {
     setData((d) => ({ ...d, [k]: v }));
     setErrors((e) => ({ ...e, [k]: "" }));
   };
 
-  const message = useMemo(
-    () =>
-      [
-        "Hello LOTUS 👋",
-        "",
-        "I would like a personalized quotation.",
-        "",
-        `Name: ${data.fullName}`,
-        `Phone: ${data.phone}`,
-        `Service: ${data.service}`,
-        `Pickup: ${data.pickup}`,
-        `Destination: ${data.destination}`,
-        `Move Size: ${data.moveSize}`,
-        `Date: ${data.date}`,
-        `Property Type: ${data.propertyType}`,
-        `Floor: ${data.floor || "Ground"}`,
-        `Elevator: ${data.elevator}`,
-        `Packing: ${data.packing}`,
-        `Storage: ${data.storage}`,
-        `Notes: ${data.notes || "—"}`,
-      ].join("\n"),
-    [data],
-  );
+  const preview = useMemo(() => {
+    const details: BookingDetails = {
+      reference: "LMS-PREVIEW",
+      fullName: data.fullName,
+      phone: data.phone,
+      service: data.service,
+      pickup: data.pickup,
+      destination: data.destination,
+      moveSize: data.moveSize,
+      date: data.date,
+      propertyType: data.propertyType,
+      floor: data.floor,
+      elevator: data.elevator,
+      packing: data.packing,
+      storage: data.storage,
+    };
+    const lines = estimateLines(details);
+    return { lines, total: estimateTotal(lines) };
+  }, [data]);
+
+  const submit = async () => {
+    if (sending) return;
+    setSending(true);
+    const details: BookingDetails = {
+      reference: makeReference(data.fullName),
+      fullName: data.fullName,
+      phone: data.phone,
+      whatsapp: data.whatsapp,
+      email: data.email,
+      service: data.service,
+      pickup: data.pickup,
+      destination: data.destination,
+      moveSize: data.moveSize,
+      date: data.date,
+      propertyType: data.propertyType,
+      floor: data.floor || "Ground",
+      elevator: data.elevator,
+      packing: data.packing,
+      storage: data.storage,
+      notes: data.notes || "—",
+    };
+    const lines = estimateLines(details);
+    const ok = await sendToFormspree({
+      _subject: `Move booking ${details.reference} — ${details.fullName}`,
+      _replyto: details.email || "",
+      formType: "Move booking request",
+      reference: details.reference,
+      name: details.fullName,
+      phone: details.phone,
+      whatsapp: details.whatsapp ?? "",
+      email: details.email || "—",
+      service: details.service,
+      pickup: details.pickup,
+      destination: details.destination,
+      moveSize: details.moveSize,
+      preferredDate: details.date,
+      propertyType: details.propertyType ?? "",
+      floor: details.floor ?? "",
+      elevator: details.elevator ?? "",
+      packing: details.packing ?? "",
+      storage: details.storage ?? "",
+      notes: details.notes ?? "",
+      estimateBreakdown: lines.map((l) => `${l.label}: ${formatNaira(l.amount)}`).join(" | "),
+      estimatedTotal: formatNaira(estimateTotal(lines)),
+    });
+    setSending(false);
+    if (!ok) {
+      toast.error("We couldn't submit your request. Please check your connection and try again.");
+      return;
+    }
+    setBooking(details);
+    toast.success(`Booking ${details.reference} received — your invoice is ready.`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
 
   const validate = (i: number) => {
     const schema = [step1Schema, step2Schema, step3Schema][i];
@@ -148,6 +213,8 @@ function BookPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  if (booking) return <BookingSuccess booking={booking} />;
+
   return (
     <div className="bg-background pb-24 pt-32 lg:pt-40">
       <div className="container-lotus max-w-3xl">
@@ -155,10 +222,11 @@ function BookPage() {
           <p className="text-xs font-semibold uppercase tracking-[0.22em] text-accent">Booking</p>
           <h1 className="mt-4 font-display text-4xl font-bold sm:text-5xl">Book your move</h1>
           <p className="mt-4 text-muted-foreground">
-            Four short steps. When you're done, we open WhatsApp with your details so a consultant
-            can send a personalised quotation.
+            Four short steps. Submit and we instantly generate your proforma invoice and a moving-day
+            reminder, while a consultant reviews the details.
           </p>
         </Reveal>
+
 
         <div className="mt-10 grid grid-cols-4 gap-2">
           {STEP_LABELS.map((label, i) => (
@@ -368,44 +436,51 @@ function BookPage() {
                 </div>
               </dl>
 
-              <a
-                href={waLink(message)}
-                target="_blank"
-                rel="noreferrer"
-                onClick={() => {
-                  toast.success("Opening WhatsApp with your move details…");
-                  void sendToFormspree({
-                    _subject: `Move booking — ${data.fullName}`,
-                    formType: "Move booking request",
-                    name: data.fullName,
-                    phone: data.phone,
-                    whatsapp: data.whatsapp,
-                    email: data.email || "—",
-                    service: data.service,
-                    pickup: data.pickup,
-                    destination: data.destination,
-                    moveSize: data.moveSize,
-                    preferredDate: data.date,
-                    propertyType: data.propertyType,
-                    floor: data.floor || "Ground",
-                    elevator: data.elevator,
-                    packing: data.packing,
-                    storage: data.storage,
-                    notes: data.notes || "—",
-                  });
-                }}
-                className="mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground shadow-soft transition-all duration-300 hover:-translate-y-1"
+              <div className="mt-8 rounded-2xl border border-border bg-secondary/40 p-5">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+                  Estimated proforma invoice
+                </p>
+                <ul className="mt-4 space-y-2 text-sm">
+                  {preview.lines.map((l) => (
+                    <li key={l.label} className="flex justify-between gap-4">
+                      <span className="text-muted-foreground">{l.label}</span>
+                      <span className="font-medium">{formatNaira(l.amount)}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-4 flex justify-between border-t border-border pt-4 text-base font-semibold">
+                  <span>Estimated total</span>
+                  <span>{formatNaira(preview.total)}</span>
+                </div>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Indicative only — a consultant confirms the final figure before any payment.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={submit}
+                disabled={sending}
+                className="mt-9 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground shadow-soft transition-all duration-300 hover:-translate-y-1 disabled:pointer-events-none disabled:opacity-60"
               >
-                <WhatsappIcon className="h-5 w-5" />
-                Continue to WhatsApp
-              </a>
+                {sending ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" /> Submitting…
+                  </>
+                ) : (
+                  <>
+                    <Check className="h-5 w-5" /> Submit booking request
+                  </>
+                )}
+              </button>
 
               <p className="mt-4 text-center text-xs text-muted-foreground">
-                A LOTUS consultant reviews your details and sends a personalised quotation on
-                WhatsApp.
+                Your request goes straight to the LOTUS team. We'll generate your invoice and move
+                reminder instantly.
               </p>
             </div>
           )}
+
 
           <div className="mt-9 flex items-center justify-between gap-3">
             <button
@@ -444,6 +519,92 @@ function BookPage() {
     </div>
   );
 }
+
+function BookingSuccess({ booking }: { booking: BookingDetails }) {
+  const lines = estimateLines(booking);
+  const total = estimateTotal(lines);
+  const invoiceHtml = buildInvoiceHtml(booking);
+
+  const openInvoice = () => {
+    if (!openInvoiceForPrint(invoiceHtml)) {
+      downloadFile(`${booking.reference}-invoice.html`, invoiceHtml, "text/html");
+    }
+  };
+
+  return (
+    <div className="bg-background pb-24 pt-32 lg:pt-40">
+      <div className="container-lotus max-w-2xl">
+        <Reveal>
+          <div className="rounded-3xl border border-border bg-card p-8 text-center shadow-soft sm:p-12">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+              <Check className="h-7 w-7 text-primary" />
+            </span>
+            <h1 className="mt-6 font-display text-3xl font-bold sm:text-4xl">
+              Booking request received
+            </h1>
+            <p className="mt-3 text-muted-foreground">
+              Thank you, {booking.fullName}. Your request is with our move team — a consultant
+              confirms crew, timing and the final figure shortly.
+            </p>
+            <p className="mt-5 inline-flex rounded-full bg-secondary px-5 py-2 text-sm font-semibold tracking-[0.08em]">
+              Ref {booking.reference}
+            </p>
+
+            <dl className="mt-8 space-y-2 text-left text-sm">
+              {lines.map((l) => (
+                <div key={l.label} className="flex justify-between gap-4">
+                  <dt className="text-muted-foreground">{l.label}</dt>
+                  <dd className="font-medium">{formatNaira(l.amount)}</dd>
+                </div>
+              ))}
+              <div className="flex justify-between border-t border-border pt-3 text-base font-semibold">
+                <dt>Estimated total</dt>
+                <dd>{formatNaira(total)}</dd>
+              </div>
+            </dl>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={openInvoice}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-4 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent"
+              >
+                <FileText className="h-4 w-4" /> View / save invoice
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  downloadFile(
+                    `${booking.reference}-reminder.ics`,
+                    buildReminderIcs(booking),
+                    "text/calendar",
+                  )
+                }
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-4 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:text-primary"
+              >
+                <CalendarClock className="h-4 w-4" /> Add move reminder
+              </button>
+            </div>
+
+            <p className="mt-6 text-xs text-muted-foreground">
+              The reminder alerts you 7 days and 1 day before {booking.date}. We also send a
+              follow-up confirmation to {booking.email || booking.phone}.
+            </p>
+
+            <Link
+              to="/"
+              className="mt-8 inline-flex text-sm font-semibold text-primary hover:text-accent"
+            >
+              Back to home
+            </Link>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  );
+}
+
+
 
 function Field({
   label,

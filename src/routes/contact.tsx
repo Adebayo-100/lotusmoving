@@ -4,8 +4,8 @@ import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Reveal } from "@/components/reveal";
-import { InstagramIcon, TiktokIcon, WhatsappIcon } from "@/components/social-icons";
-import { SITE, sendToFormspree, waLink } from "@/lib/site";
+import { InstagramIcon, TiktokIcon } from "@/components/social-icons";
+import { SITE, sendToFormspree } from "@/lib/site";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -38,6 +38,8 @@ const schema = z.object({
 function ContactPage() {
   const [form, setForm] = useState({ name: "", phone: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,7 +52,7 @@ function ContactPage() {
       return;
     }
     setErrors({});
-    const msg = `Hello LOTUS 👋\n\nName: ${result.data.name}\nPhone: ${result.data.phone}\nMessage: ${result.data.message}`;
+    setSending(true);
     const ok = await sendToFormspree({
       _subject: `Website enquiry — ${result.data.name}`,
       formType: "Contact enquiry",
@@ -58,11 +60,16 @@ function ContactPage() {
       phone: result.data.phone,
       message: result.data.message,
     });
-    toast[ok ? "success" : "message"](
-      ok ? "Message sent. Opening WhatsApp…" : "Opening WhatsApp…",
-    );
-    window.open(waLink(msg), "_blank", "noopener,noreferrer");
+    setSending(false);
+    if (!ok) {
+      toast.error("We couldn't send your message. Please try again in a moment.");
+      return;
+    }
+    setSent(true);
+    setForm({ name: "", phone: "", message: "" });
+    toast.success("Message sent — we'll reply shortly.");
   };
+
 
 
   return (
@@ -141,7 +148,7 @@ function ContactPage() {
           >
             <h2 className="font-display text-2xl font-semibold">Send a quick message</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              We'll continue the conversation on WhatsApp.
+              We reply by phone or email — no app switching required.
             </p>
 
             <div className="mt-7 grid gap-5">
@@ -185,12 +192,20 @@ function ContactPage() {
               </label>
             </div>
 
+            {sent && (
+              <p className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 px-5 py-4 text-sm font-medium text-primary">
+                Message received — a move consultant will reply shortly.
+              </p>
+            )}
+
             <button
               type="submit"
-              className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground transition-all duration-300 hover:-translate-y-1"
+              disabled={sending}
+              className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-7 py-4 text-sm font-semibold text-accent-foreground transition-all duration-300 hover:-translate-y-1 disabled:pointer-events-none disabled:opacity-60"
             >
-              <WhatsappIcon className="h-5 w-5" /> Send on WhatsApp
+              {sending ? "Sending…" : "Send message"}
             </button>
+
             <p className="mt-4 text-center text-xs text-muted-foreground">
               Planning a full relocation?{" "}
               <Link to="/book" className="font-semibold text-primary">
