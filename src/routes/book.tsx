@@ -1,12 +1,23 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { ArrowLeft, ArrowRight, CalendarClock, Check, FileText, Loader2 } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Reveal } from "@/components/reveal";
-import { WhatsappIcon } from "@/components/social-icons";
-import { SERVICES, sendToFormspree, waLink } from "@/lib/site";
+import { SERVICES, sendToFormspree } from "@/lib/site";
+import {
+  buildInvoiceHtml,
+  buildReminderIcs,
+  downloadFile,
+  estimateLines,
+  estimateTotal,
+  formatNaira,
+  makeReference,
+  openInvoiceForPrint,
+  type BookingDetails,
+} from "@/lib/booking-doc";
 import { cn } from "@/lib/utils";
+
 
 export const Route = createFileRoute("/book")({
   head: () => ({
