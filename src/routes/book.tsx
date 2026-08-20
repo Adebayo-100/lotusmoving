@@ -520,6 +520,92 @@ function BookPage() {
   );
 }
 
+function BookingSuccess({ booking }: { booking: BookingDetails }) {
+  const lines = estimateLines(booking);
+  const total = estimateTotal(lines);
+  const invoiceHtml = buildInvoiceHtml(booking);
+
+  const openInvoice = () => {
+    if (!openInvoiceForPrint(invoiceHtml)) {
+      downloadFile(`${booking.reference}-invoice.html`, invoiceHtml, "text/html");
+    }
+  };
+
+  return (
+    <div className="bg-background pb-24 pt-32 lg:pt-40">
+      <div className="container-lotus max-w-2xl">
+        <Reveal>
+          <div className="rounded-3xl border border-border bg-card p-8 text-center shadow-soft sm:p-12">
+            <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+              <Check className="h-7 w-7 text-primary" />
+            </span>
+            <h1 className="mt-6 font-display text-3xl font-bold sm:text-4xl">
+              Booking request received
+            </h1>
+            <p className="mt-3 text-muted-foreground">
+              Thank you, {booking.fullName}. Your request is with our move team — a consultant
+              confirms crew, timing and the final figure shortly.
+            </p>
+            <p className="mt-5 inline-flex rounded-full bg-secondary px-5 py-2 text-sm font-semibold tracking-[0.08em]">
+              Ref {booking.reference}
+            </p>
+
+            <dl className="mt-8 space-y-2 text-left text-sm">
+              {lines.map((l) => (
+                <div key={l.label} className="flex justify-between gap-4">
+                  <dt className="text-muted-foreground">{l.label}</dt>
+                  <dd className="font-medium">{formatNaira(l.amount)}</dd>
+                </div>
+              ))}
+              <div className="flex justify-between border-t border-border pt-3 text-base font-semibold">
+                <dt>Estimated total</dt>
+                <dd>{formatNaira(total)}</dd>
+              </div>
+            </dl>
+
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={openInvoice}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-4 text-sm font-semibold text-primary-foreground transition-all duration-300 hover:-translate-y-0.5 hover:bg-accent"
+              >
+                <FileText className="h-4 w-4" /> View / save invoice
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  downloadFile(
+                    `${booking.reference}-reminder.ics`,
+                    buildReminderIcs(booking),
+                    "text/calendar",
+                  )
+                }
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-border px-6 py-4 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:text-primary"
+              >
+                <CalendarClock className="h-4 w-4" /> Add move reminder
+              </button>
+            </div>
+
+            <p className="mt-6 text-xs text-muted-foreground">
+              The reminder alerts you 7 days and 1 day before {booking.date}. We also send a
+              follow-up confirmation to {booking.email || booking.phone}.
+            </p>
+
+            <Link
+              to="/"
+              className="mt-8 inline-flex text-sm font-semibold text-primary hover:text-accent"
+            >
+              Back to home
+            </Link>
+          </div>
+        </Reveal>
+      </div>
+    </div>
+  );
+}
+
+
+
 function Field({
   label,
   error,
