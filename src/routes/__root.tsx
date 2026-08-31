@@ -76,30 +76,43 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const SITE_URL = import.meta.env.VITE_SITE_URL || "https://lotusmoving.com";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "LOTUS Moving Service | Move Without Stress in Nigeria" },
+      { title: "Lotus Moving | Professional Moving & Relocation Services" },
       {
         name: "description",
         content:
-          "Premium home and office relocation, packing, storage and delivery in Nigeria. Book your move with LOTUS in minutes and finish on WhatsApp.",
+          "Lotus Moving provides professional moving and relocation services including residential moving, commercial moving, office relocation, furniture moving, and packing and moving solutions.",
       },
-      { name: "author", content: "LOTUS Moving Service" },
+      {
+        name: "keywords",
+        content:
+          "moving company, professional movers, moving services, house moving, residential moving, commercial moving, office relocation, furniture moving, packing and moving, relocation services",
+      },
+      { name: "author", content: "Lotus Moving" },
+      { name: "creator", content: "Lotus Moving" },
+      { name: "publisher", content: "Lotus Moving" },
       { name: "theme-color", content: "#0D6B4F" },
-      { property: "og:site_name", content: "LOTUS Moving Service" },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      { property: "og:site_name", content: "Lotus Moving" },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary_large_image" },
-      { property: "og:title", content: "LOTUS Moving Service | Move Without Stress in Nigeria" },
-      { name: "twitter:title", content: "LOTUS Moving Service | Move Without Stress in Nigeria" },
-      { property: "og:description", content: "Premium home and office relocation, packing, storage and delivery in Nigeria. Book your move with LOTUS in minutes and finish on WhatsApp." },
-      { name: "twitter:description", content: "Premium home and office relocation, packing, storage and delivery in Nigeria. Book your move with LOTUS in minutes and finish on WhatsApp." },
+      { property: "og:locale", content: "en_US" },
+      { property: "og:url", content: SITE_URL },
+      { property: "og:title", content: "Lotus Moving | Professional Moving & Relocation Services" },
+      { property: "og:description", content: "Lotus Moving provides professional moving and relocation services including residential moving, commercial moving, office relocation, furniture moving, and packing and moving solutions." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1ce3cecc-7bf2-4b35-9799-c980da7b9117/id-preview-35a8338e--819b5ab1-9f8b-4fcb-b1e1-759df6e70a3f.lovable.app-1785356708576.png" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Lotus Moving | Professional Moving & Relocation Services" },
+      { name: "twitter:description", content: "Lotus Moving provides professional moving and relocation services including residential moving, commercial moving, office relocation, furniture moving, and packing and moving solutions." },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1ce3cecc-7bf2-4b35-9799-c980da7b9117/id-preview-35a8338e--819b5ab1-9f8b-4fcb-b1e1-759df6e70a3f.lovable.app-1785356708576.png" },
     ],
     links: [
+      { rel: "canonical", href: SITE_URL },
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://api.fontshare.com" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -113,6 +126,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700&display=swap",
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "apple-touch-icon", href: "/favicon.ico" },
     ],
     scripts: [
       {
@@ -120,7 +134,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "MovingCompany",
-          name: "LOTUS Moving Service",
+          name: "Lotus Moving",
+          url: "https://lotusmoving.com",
           slogan: "We Move What Matters.",
           telephone: "+2348137912310",
           areaServed: "Nigeria",
