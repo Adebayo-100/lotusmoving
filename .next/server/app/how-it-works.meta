@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/how-it-works/layout,_N_T_/how-it-works/page,_N_T_/how-it-works"
+  },
+  "routeCache": {
+    "key": "/route-cache/APP_PAGE/f9743b48d802b88d861f28e4c1af82c70a18db4f1ce3c36f90d4e8f5bc1df731/$/how-it-works",
+    "owner": {
+      "kind": "APP_PAGE",
+      "sourceRoute": "/how-it-works/page"
+    },
+    "isFallback": false
+  }
+}
